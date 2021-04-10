@@ -144,3 +144,4 @@ public class appController implements ErrorController{
     }
 
 }
+//Prueba del trigger
