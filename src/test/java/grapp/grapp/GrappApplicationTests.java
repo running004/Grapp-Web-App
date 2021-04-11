@@ -15,5 +15,13 @@ class GrappApplicationTests {
 		assertTrue(true);
 		assertEquals(1,2);
 	}
+	@Test
+	void testUpload(){
+		UnitTestUpload test = new UnitTestUpload();
+		try{
+			test.IdInsertTest();
+		}catch(Exception e){}
+	}
+
 
 }
