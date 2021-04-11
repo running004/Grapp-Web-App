@@ -15,6 +15,7 @@ class GrappApplicationTests {
 		assertTrue(true);
 		assertEquals(1,1);
 	}
+	/*
 	@Test
 	void testUnitUploadId(){
 		UnitTestUpload test = new UnitTestUpload();
@@ -25,7 +26,7 @@ class GrappApplicationTests {
 
 		}
 	}
-	/*
+	
 	@Test
 	void testUnitUploadImg(){
 		UnitTestUpload test = new UnitTestUpload();
