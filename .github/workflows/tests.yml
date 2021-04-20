@@ -23,10 +23,4 @@ jobs:
         if: always()
         with:
           files: test-results/**/*.xml
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Unit Test Results
-            path: |
-              test-results/*.xml
+      
