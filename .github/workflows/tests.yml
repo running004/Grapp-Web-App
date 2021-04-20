@@ -1,4 +1,3 @@
-https://github.com/bdmariobd/grapp-web-app/workflows/tests.yml/badge.svg
 name: tests
 on: push
 jobs:
