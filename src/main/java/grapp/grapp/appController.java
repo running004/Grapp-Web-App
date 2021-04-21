@@ -24,8 +24,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+//nuevo
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+
+
 @Controller
 public class appController implements ErrorController{
+
+    //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
+  
 
     @Value("${spring.datasource.url}")
     private String dbUrl;
@@ -35,6 +44,7 @@ public class appController implements ErrorController{
 
     @GetMapping(value= "/")
     String index(Model model){
+        model.addAttribute("usuarioLogin", false);
         model.addAttribute("key", "prueba");
         List<String> listado = new ArrayList<String>();
         listado.add("Pagina principal: vuelve a la página principal");
@@ -101,10 +111,52 @@ public class appController implements ErrorController{
         return "signup.html";
     }
 
-    @GetMapping(value="/login")
-    String login(Model model,@Valid formulario formulario){        
-        return "login.html";
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String crearFormularioUsuario(Model model) {
+		User usuario = new User();
+		model.addAttribute("usuario", usuario);
+		return "login"; 
+	}
+//---------------------------------------------------------------------------
+    //COMPROBAMOS EL INICIO DE SESION
+    @RequestMapping(value = "/comprobarusuario", method = RequestMethod.GET)
+    public String comprobarUsuario(Model model, User usuario) {
+        System.out.println(usuario.getEmail());
+        System.out.println(usuario.getContrasenia());
+        model.addAttribute("usuarioLogin", false);
+        //aqui me haria un servicio que llame a la base de datos pasandole un mail y q compruebe que existe
+        /*
+        Usuario usu= serviceUsuario.findOne(usuario.getEmail());
+        Usuario usuar = new Usuario();
+        
+        if(usu != null) {
+        //AQUI COMPRUEBO EMAIL Y CONTRASEÑAS SON IGUALES SINO SON IGUALES LE DEVOLVEMOS AL LOGIN CON UN MENSAJE DE ERROR
+            if((usuario.getEmail().equals(usu.getEmail())) &&
+                    (usuario.getContrasenia().equals(usu.getContrasenia()))	) {
+                return "redirect:AQUI PONES EL HTML QUE QUIERAS";
+            }else {
+
+                model.addAttribute("usuario", usuar);
+                model.addAttribute("mensaje", "Usuario o contraseña invalidos");
+                return "login"; 
+            }
+        }
+        model.addAttribute("usuario", usuar);
+        model.addAttribute("mensaje", "Usuario o contraseña invalidos");
+        return "login"; 
+        */
+        return "index";
+
     }
+
+//---------------------------------------------------------------------------
+
+
+
+
+
+
 
     @PostMapping(value="/see")
     String seePost(Model model, @Valid formulario formulario, BindingResult bindingResult){

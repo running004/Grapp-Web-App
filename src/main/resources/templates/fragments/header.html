@@ -18,28 +18,30 @@
                 <a class="nav-link" th:href="@{/}">Pagina principal</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" th:href="@{upload}">Subir una foto</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{see}">Ver mis fotos</a>
+                <a class="nav-link" th:href="@{upload}">Mi Armario</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" th:href="@{message}">Mensajes</a>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i>
-                  Usuario
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
-                  <li><a class="dropdown-item" href="#">Estadísticas</a></li>
-                  <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
-                </ul>
-              </li>
-              <a role="button" th:href="@{login}" class="btn btn-info"><i class="bi bi-box-arrow-in-right"></i>    Log-In</a></ul>
+
+         
+
+                <li th:if="${usuarioLogin == true}" class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i>
+                    Usuario
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDarkDropdownMenuLink">
+                    <li><a class="dropdown-item" href="#">Estadísticas</a></li>
+                    <li><a class="dropdown-item" href="#">Mi cuenta</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                  </ul>
+                </li>
+             
+              <ul th:if="${usuarioLogin == false}">
+                <a role="button" th:href="@{login}" class="btn btn-info"><i class="bi bi-box-arrow-in-right"></i>    Log-In</a>
               </ul>
-              
+          
             <form class="d-flex">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
