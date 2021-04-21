@@ -1,3 +1,7 @@
+[![Codacy Security Scan](https://github.com/bdmariobd/grapp-web-app/actions/workflows/codacy-analysis.yml/badge.svg)](https://github.com/bdmariobd/grapp-web-app/actions/workflows/codacy-analysis.yml)
+[![CodeQL](https://github.com/bdmariobd/grapp-web-app/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/bdmariobd/grapp-web-app/actions/workflows/codeql-analysis.yml)
+[![tests](https://github.com/bdmariobd/grapp-web-app/actions/workflows/tests.yml/badge.svg)](https://github.com/bdmariobd/grapp-web-app/actions/workflows/tests.yml)
+
 # GuardaRopApp
 
 ## Introduccion
