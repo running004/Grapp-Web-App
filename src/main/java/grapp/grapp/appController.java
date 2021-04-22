@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
+//import javax.sql.DataSource;
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+*/
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,12 +33,12 @@ public class appController implements ErrorController{
     //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
   
 
-    @Value("${spring.datasource.url}")
+    /*@Value("${spring.datasource.url}")
     private String dbUrl;
   
     @Autowired
     private DataSource dataSource;
-
+    */
     @GetMapping(value= "/")
     String index(Model model){
         model.addAttribute("usuarioLogin", false);
@@ -59,7 +60,8 @@ public class appController implements ErrorController{
     String uploadPost(Model model, @Valid formulario formulario, BindingResult bindingResult){
         
         //bbddd
-        try (Connection connection = dataSource.getConnection()) {
+        Connect connect = new Connect();
+        try (Connection connection = connect.getDataSource().getConnection()) {
             Statement stmt = connection.createStatement();
             //upload photo
             String generatedId = imgUrlScraper.uploadImg(formulario.getImg());
@@ -153,7 +155,8 @@ public class appController implements ErrorController{
 
     @PostMapping(value="/see")
     String seePost(Model model, @Valid formulario formulario, BindingResult bindingResult){
-        try (Connection connection = dataSource.getConnection()) {
+        Connect connect = new Connect();
+        try (Connection connection = connect.getDataSource().getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT idImg FROM imgs WHERE idUser='" + formulario.getText() +"'");
             Map<String, String> imgUrlMap= new HashMap<String, String>();
