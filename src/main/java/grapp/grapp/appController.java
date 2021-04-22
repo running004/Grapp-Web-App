@@ -156,7 +156,7 @@ public class appController implements ErrorController{
     @PostMapping(value="/see")
     String seePost(Model model, @Valid formulario formulario, BindingResult bindingResult){
         Connect connect = new Connect();
-        try (Connection connection = connect.getDataSource().getConnection()) {
+        try (Connection connection = connect.dataSource().getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT idImg FROM imgs WHERE idUser='" + formulario.getText() +"'");
             Map<String, String> imgUrlMap= new HashMap<String, String>();
