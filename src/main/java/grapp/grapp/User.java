@@ -88,4 +88,17 @@ public class User
         return logueado;
     }
 
+    
+    public boolean searchUserForSingUp(String email){
+        Connect connection = new Connect();
+        boolean existe = false;
+        try (Connection c = connection.getDataSource().getConnection()) {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' ");
+            if(rs.next()) existe = true;
+        } catch(Exception e){
+            System.out.println("Usuario ya existente");
+        }
+        return existe;
+    }
 }
