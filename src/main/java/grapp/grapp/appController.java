@@ -108,7 +108,9 @@ public class appController implements ErrorController{
     }
 
     @GetMapping(value="/signup")
-    String signup(Model model,@Valid formulario formulario){        
+    String signup(Model model){ 
+        User usuario = new User();
+		model.addAttribute("usuario", usuario);       
         return "signup.html";
     }
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
