@@ -8,12 +8,13 @@ import java.sql.Statement;
 
 public class User
 {
-    private String email, contrasenia;
+    private String email, contrasenia, contraseniaRepetida;
     public User(){
     }
-    public User(String email, String contrasenia) {
+    public User(String email, String contrasenia, String contraseniaR) {
         this.email = email;
         this.contrasenia = contrasenia;
+        this.contraseniaRepetida=contraseniaR;
         /*this.email = email;
         this.apellidos = apellidos;*/
     }
@@ -29,6 +30,11 @@ public class User
     public String getContrasenia() {
         return contrasenia;
     }
+    public String getContraseniaR() {
+        return contraseniaRepetida;
+    }
+    
+
     /*public void setNombre(String nombre) {
         this.nombre=nombre;
     }
@@ -37,6 +43,10 @@ public class User
     }*/
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
+    }
+    
+    public void setContraseniaR(String contraseniaR) {
+        this.contraseniaRepetida = contraseniaR;
     }
     public void setEmail(String email) {
         this.email = email;
@@ -65,6 +75,9 @@ public class User
 		return sb.toString();
 	}
     public String insertUser(String email, String contrasenia, DataSource dataSource){
+        if(this.contrasenia!=this.contraseniaRepetida){
+            return "Las contraseñas no coindiden.";
+        }
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             stmt.executeQuery("INSERT INTO USUARIOS VALUES ("+ email + ", " + hashContrasenia(contrasenia) +")");
