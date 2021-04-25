@@ -64,8 +64,7 @@ public class appController implements ErrorController{
     String uploadPost(Model model, @Valid formulario formulario, BindingResult bindingResult){
         
         //bbddd
-        Connect connect = new Connect();
-        try (Connection connection = connect.getDataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             //upload photo
             String generatedId = imgUrlScraper.uploadImg(formulario.getImg());
@@ -112,19 +111,19 @@ public class appController implements ErrorController{
     String signup(Model model,@Valid formulario formulario){        
         return "signup.html";
     }
-    @RequestMapping(value = "/crearusuario", method = RequestMethod.GET)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String crearUsuario(Model model, User usuario) {
-        Boolean existe=usuario.searchUserForSingUp(usuario.getEmail());
+        Boolean existe=usuario.searchUserForSingUp(usuario.getEmail(), dataSource);
 
         if(existe){
             //mandar error al html de user ya creado
 		model.addAttribute("yaCreado", existe);
-            return "/singup";
+            return "/signup";
         }
         else{
-            usuario.insertUser(usuario.getEmail(), usuario.getContrasenia());
+            usuario.insertUser(usuario.getEmail(), usuario.getContrasenia(), dataSource);
         }
-        return "/";
+        return "signup/";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -171,8 +170,7 @@ public class appController implements ErrorController{
 
     @PostMapping(value="/see")
     String seePost(Model model, @Valid formulario formulario, BindingResult bindingResult){
-        Connect connect = new Connect();
-        try (Connection connection = connect.dataSource().getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT idImg FROM imgs WHERE idUser='" + formulario.getText() +"'");
             Map<String, String> imgUrlMap= new HashMap<String, String>();
