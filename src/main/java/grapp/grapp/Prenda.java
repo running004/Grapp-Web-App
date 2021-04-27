@@ -8,54 +8,35 @@ import java.sql.Statement;
 
 public class Prenda
 {
-    private String email, contrasenia, contraseniaRepetida;
+    private String nombreUsuario, foto;
     public Prenda(){
     }
-    public Prenda(String email, String contrasenia, String contraseniaR) {
-        this.email = email;
-        this.contrasenia = contrasenia;
-        this.contraseniaRepetida=contraseniaR;
-        /*this.email = email;
+    public Prenda(String nombreUsuario, String foto) {
+        this.nombreUsuario = nombreUsuario;
+        this.foto = foto;
+        /*this.nombreUsuario = nombreUsuario;
         this.apellidos = apellidos;*/
     }
-    /*public String getNombre() {
-        return nombre;
-    }*/
-    public String getEmail() {
-        return email;
-    }
-    /*public String getApellidos() {
-        return apellidos;
-    }*/
-    public String getContrasenia() {
-        return contrasenia;
-    }
-    public String getContraseniaR() {
-        return contraseniaRepetida;
-    }
-    
 
-    /*public void setNombre(String nombre) {
-        this.nombre=nombre;
+    public String getnombreUsuario() {
+        return nombreUsuario;
     }
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }*/
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
+    public String getfoto() {
+        return foto;
     }
-    
-    public void setContraseniaR(String contraseniaR) {
-        this.contraseniaRepetida = contraseniaR;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setfoto(String foto) {
+        this.foto = foto;
     }
     
-    public Boolean login(String email, String contrasenia){
-        return this.email.equals(email) && this.contrasenia.equals(contrasenia);
+    public void setnombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
-    public String hashContrasenia(String password) {
+    /*
+    public Boolean login(String nombreUsuario, String foto){
+        return this.nombreUsuario.equals(nombreUsuario) && this.foto.equals(foto);
+    }
+*/
+    public String hashfoto(String password) {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -74,21 +55,22 @@ public class Prenda
 		    
 		return sb.toString();
 	}
-    public String insertUser(String email, String contrasenia, DataSource dataSource){
+    /*
+    public String insertUser(String nombreUsuario, String foto, DataSource dataSource){
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            stmt.executeQuery("INSERT INTO USUARIOS VALUES ("+ email + ", " + hashContrasenia(contrasenia) +")");
+            stmt.executeQuery("INSERT INTO USUARIOS VALUES ("+ nombreUsuario + ", " + hashfoto(foto) +")");
             return "Usuario insertado correctamente";
         } catch(Exception e){
             return "Fallo al insertar usuario, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres";
         }
 
     }
-    public boolean searchUser(String email, String contrasenia, DataSource dataSource){
+    public boolean searchUser(String nombreUsuario, String foto, DataSource dataSource){
         boolean logueado = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' AND contrasenia='"+contrasenia+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE nombreUsuario='"+nombreUsuario+"' AND foto='"+foto+"' ");
             if(rs.next()) logueado = true;
         } catch(Exception e){
             System.out.println("Fallo al loguearse, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres");
@@ -97,15 +79,16 @@ public class Prenda
     }
 
     
-    public boolean searchUserForSingUp(String email, DataSource dataSource){
+    public boolean searchUserForSingUp(String nombreUsuario, DataSource dataSource){
         boolean existe = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE nombreUsuario='"+nombreUsuario+"' ");
             if(rs.next()) existe = true;
         } catch(Exception e){
             System.out.println("Usuario ya existente");
         }
         return existe;
     }
+    */
 }
