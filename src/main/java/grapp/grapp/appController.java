@@ -35,7 +35,9 @@ public class appController implements ErrorController{
     Boolean usuarioLoggeado = false;
    
     //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
-  
+    void botonLog(Model model){   
+        model.addAttribute("usuarioLogin",usuarioLoggeado) ;
+    }
 
     @Value("${spring.datasource.url}")
     private String dbUrl;
@@ -52,11 +54,13 @@ public class appController implements ErrorController{
         listado.add("Subir fotos: te permite subir una foto devolviendo un id");
         listado.add("Ver fotos: te permite ver las fotos subidas mediante id");
         model.addAttribute("features", listado);
+        botonLog(model);
         return "index.html";
     }
 
     @GetMapping(value="/upload")
     String upload(Model model,@Valid formulario formulario){
+        botonLog(model);
         return "upload.html";
     }
 
@@ -88,29 +92,34 @@ public class appController implements ErrorController{
         } catch(Exception e){
             model.addAttribute("excepcion", e.getMessage());
         }
+        botonLog(model);
         return "upload.html";
     }
 
     @GetMapping(value="/see")
     String see(Model model,@Valid formulario formulario){        
+        botonLog(model);
         return "see.html";
     }
 
     
     @GetMapping(value="/favorites")
-    String favorites(Model model,@Valid formulario formulario){        
+    String favorites(Model model,@Valid formulario formulario){  
+        botonLog(model);      
         return "favorites.html";
     }
     
     @GetMapping(value="/message")
-    String message(Model model,@Valid formulario formulario){        
+    String message(Model model,@Valid formulario formulario){    
+        botonLog(model);    
         return "message.html";
     }
 
     @GetMapping(value="/signup")
     String signup(Model model){ 
         User usuario = new User();
-		model.addAttribute("usuario", usuario);       
+		model.addAttribute("usuario", usuario);  
+        botonLog(model);     
         return "signup.html";
     }
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -130,6 +139,7 @@ public class appController implements ErrorController{
         else{
             usuario.insertUser(usuario.getEmail(), usuario.getContrasenia(), dataSource);
         }
+        botonLog(model);
         return "signup/";
     }
 
@@ -137,6 +147,7 @@ public class appController implements ErrorController{
 	public String crearFormularioUsuario(Model model) {
 		User usuario = new User();
 		model.addAttribute("usuario", usuario);
+        botonLog(model);
 		return "login.html"; 
 	}
 //---------------------------------------------------------------------------
@@ -144,7 +155,7 @@ public class appController implements ErrorController{
     @RequestMapping(value = "/comprobarusuario", method = RequestMethod.GET)
     public String comprobarUsuario(Model model, User usuario) {
         usuarioLoggeado = true;
-        model.addAttribute("usuarioLogin", usuarioLoggeado);
+        botonLog(model);
         System.out.println(usuario.getEmail());
         System.out.println(usuario.getContrasenia());
         usuario.hashContrasenia(usuario.getContrasenia());
@@ -188,6 +199,7 @@ public class appController implements ErrorController{
         } catch(Exception e){
             model.addAttribute("excepcion", e.getMessage());
         }
+        botonLog(model);
         return "see.html";
     }
 
