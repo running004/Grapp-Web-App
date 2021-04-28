@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User
 {
@@ -51,7 +53,24 @@ public class User
     public void setEmail(String email) {
         this.email = email;
     }
-    
+    public boolean validarMail(String email) {
+        if (!email.equals("")) {
+             Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+             Matcher mather = pattern.matcher(email);
+             return mather.find();
+         } else {
+             return true;
+         }
+         // end-user-code
+     }
+
+    public Boolean comprobarDatos(){
+        if(!validarMail(this.email)) return false;
+        if(this.contrasenia.length()<8) return false;
+        if(this.contrasenia!= this.contraseniaRepetida) return false;
+         return true;
+    }
     public Boolean login(String email, String contrasenia){
         return this.email.equals(email) && this.contrasenia.equals(contrasenia);
     }
