@@ -68,7 +68,7 @@ public class User
     public Boolean comprobarDatos(){
         if(!validarMail(this.email)) return false;
         if(this.contrasenia.length()<8) return false;
-        if(this.contrasenia!= this.contraseniaRepetida) return false;
+        if(!this.contrasenia.equals(contraseniaRepetida)) return false;
          return true;
     }
     public Boolean login(String email, String contrasenia){

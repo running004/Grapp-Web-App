@@ -126,7 +126,12 @@ public class appController implements ErrorController{
     public String crearUsuario(Model model, User usuario) {
 
         //VALIDAR DATOS
-
+        if(usuario.getEmail()==null || usuario.getContrasenia()==null || usuario.getContraseniaRepetida() == null){
+            //mandar error al html de email mal
+            model.addAttribute("faltan datos", true);
+            return "signup.html";
+        }
+        
         if(!usuario.comprobarDatos()){
         if(!usuario.validarMail(usuario.getEmail())){
                 //mandar error al html de email mal
@@ -140,13 +145,13 @@ public class appController implements ErrorController{
              //mandar error al html de contraseñaR mal
 		model.addAttribute("contraseniaRMal", true);
         }
-        return "/signup";
+        return "signup.html";
     }
         Boolean existe=usuario.searchUserForSingUp(usuario.getEmail(), dataSource);
         if(existe){
             //mandar error al html de user ya creado
 		model.addAttribute("yaCreado", existe);
-            return "/signup";
+            return "signup.html";
         }
         else{
             usuario.insertUser(usuario.getEmail(), usuario.getContrasenia(), dataSource);
