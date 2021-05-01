@@ -14,16 +14,14 @@
 <body>
     <header th:insert="fragments/header.html"></header>
     <div class="container espacio2">
-        <h1>Mi Armario</h1>
+        <h2>Buscar prenda en mi armario</h2>
         <br><br>
-        <ul th:if="${usuarioLogin == true}">
-        <a class="btn btn-danger btn-lg" th:href="@{upload}" role="button">Añadir</a>
-        <a class="btn btn-primary btn-lg" th:href="@{searchPrenda}" role="button">Buscar</a>
-        </ul>
-         <ul th:if="${usuarioLogin == false}">
-        <a class="btn btn-danger btn-lg" th:href="@{login}" role="button">Añadir</a>
-        <a class="btn btn-primary btn-lg"  role="button">Buscar</a>
-         </ul>
+        <nav class="navbar navbar-primary bg-none">
+          <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Buscar por nombre" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </nav>
     </div>
 
     <footer th:insert="fragments/footer.html"></footer>

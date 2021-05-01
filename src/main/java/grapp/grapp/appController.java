@@ -59,6 +59,7 @@ public class appController implements ErrorController{
     }
     @GetMapping(value="/MiArmario")
     String MiArmario(Model model,@Valid formulario formulario){
+        model.addAttribute("usuarioLogin", false);
         botonLog(model);
         return "MiArmario.html";
     }
@@ -102,6 +103,11 @@ public class appController implements ErrorController{
         return "upload.html";
     }
 
+    @GetMapping(value="/searchPrenda")
+    String searchPrenda(Model model,@Valid formulario formulario){        
+        botonLog(model);
+        return "searchPrenda";
+    }
     @GetMapping(value="/see")
     String see(Model model,@Valid formulario formulario){        
         botonLog(model);
