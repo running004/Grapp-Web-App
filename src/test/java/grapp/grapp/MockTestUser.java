@@ -43,7 +43,7 @@ public class MockTestUser {
 		//User usuario = Mockito.mock(User.class);
         when(usuario.getEmail()).thenReturn("");
 		when(usuario.getContrasenia()).thenReturn("");
-		when(usuario.getContraseniaRepetida()).thenReturn("");
+		//when(usuario.getContraseniaRepetida()).thenReturn("");
 		when(usuario.comprobarDatos()).thenReturn(null);
 		when(usuario.validarMail()).thenReturn(false);
 

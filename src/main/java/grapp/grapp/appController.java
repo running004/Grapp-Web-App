@@ -1,6 +1,7 @@
 package grapp.grapp;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +13,13 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import javax.validation.Valid;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -105,6 +110,8 @@ public class appController implements ErrorController{
 	public String crearFormularioUsuario(Model model, HttpServletRequest request) {
 		User usuario = new User();
 		model.addAttribute("usuario", usuario);
+        return "login.html";
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model, User usuario, HttpServletRequest request) {
@@ -150,7 +157,16 @@ public class appController implements ErrorController{
         // TODO Auto-generated method stub
         return "/error";
     }
-
+    @Bean
+    public DataSource dataSource() throws SQLException {
+      if (dbUrl == null || dbUrl.isEmpty()) {
+        return new HikariDataSource();
+      } else {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dbUrl);
+        return new HikariDataSource(config);
+      }
+    }
     
 
 }
