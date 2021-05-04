@@ -96,21 +96,21 @@ public class User
 		    
 		return sb.toString();
 	}
-    public String insertUser(String email, String contrasenia, DataSource dataSource){
+    public String insertUser(DataSource dataSource){
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            stmt.executeUpdate("INSERT INTO USUARIOS VALUES ('"+ email + "', '" + hashContrasenia(contrasenia) +"')");
+            stmt.executeUpdate("INSERT INTO USUARIOS VALUES ('"+ this.email + "', '" + hashContrasenia(this.contrasenia) +"')");
             return "Usuario insertado correctamente";
         } catch(Exception e){
             return "Fallo al insertar usuario, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres";
         }
 
     }
-    public boolean searchUser(String email, String contrasenia, DataSource dataSource){
+    public boolean searchUser(DataSource dataSource){
         boolean logueado = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' AND contrasenia='"+contrasenia+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+this.email+"' AND contraseña='"+hashContrasenia(this.contrasenia)+"' ");
             if(rs.next()){
                 if(rs.getInt(1) != 0)logueado = true;
             } 
@@ -121,7 +121,7 @@ public class User
     }
 
     
-    public boolean searchUserForSingUp(String email, DataSource dataSource){
+    public boolean searchUserForSignUp(DataSource dataSource){
         boolean existe = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
