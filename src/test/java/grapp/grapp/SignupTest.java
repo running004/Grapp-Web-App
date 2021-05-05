@@ -1,6 +1,7 @@
 package grapp.grapp;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
 import com.google.gson.Gson;
@@ -21,10 +22,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@RunWith(SpringRunner.class)
-public class UnitTestUser {
+@SpringBootTest
+public class SignupTest {
 
-	@Mock
+	/*@Mock
     private User usuarioValido;
     @Mock
     private User usuarioNoValido;
@@ -45,13 +46,6 @@ public class UnitTestUser {
         when(usuarioNoValido.comprobarDatos()).thenReturn("Completa todos los campos");
     }
 
-    /*@Test
-    public void searchUser()throws Exception{
-        when(usuario.searchUserForSingUp("termostato_7@hotmail.com", null)).thenReturn(true);
-        mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
-        .andExpect(status().isOk());
-    }*/
-
     @Test
 	public void InsertValido()throws Exception{
         User u = new User();
@@ -64,19 +58,23 @@ public class UnitTestUser {
 		.andExpect(MockMvcResultMatchers.view().name("login.html"));
 
     }
-    /* @Test
-	public void IdInsertTest()throws Exception{
-		User usuario = Mockito.mock(User.class);
-        when(usuario.getEmail()).thenReturn("");
-		when(usuario.getContrasenia()).thenReturn("");
-		when(usuario.getContraseniaRepetida()).thenReturn("");
-		when(usuario.comprobarDatos()).thenReturn(false);
-		when(usuario.validarMail()).thenReturn(false);
+    */
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup"))
-		.andExpect(MockMvcResultMatchers.view().name("signup.html"))
-        .andExpect(MockMvcResultMatchers.model().attribute("correoMal", true));
-    } */
-	
+    @Test
+    public void usuarioValido(){
+        
+        User usuarioValido = new User("elmillor@payaso.es", "12345678", "12345678");
+        assertEquals(null, usuarioValido.comprobarDatos());
+    }
+
+    @Test
+    public void usuarioNoValido(){
+        User correoMal = new User("ae", "12345678", "12345678");
+        User contraseniaMal = new User("elmillor@payaso.cum", "123", "123");
+        User contraseniaNoCoincide = new User("elmillor@payaso.cum", "12345678", "123987654");
+        assertNotEquals(null, correoMal.comprobarDatos());
+        assertNotEquals(null, contraseniaMal.comprobarDatos());
+        assertNotEquals(null, contraseniaNoCoincide.comprobarDatos());
+        }
     
 }
