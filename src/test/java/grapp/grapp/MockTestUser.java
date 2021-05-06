@@ -1,5 +1,6 @@
 package grapp.grapp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-public class UnitTestUser {
+public class MockTestUser {
 
 	@Mock
     private User usuario;
@@ -38,17 +39,18 @@ public class UnitTestUser {
     }*/
 
     @Test
-	public void IdInsertTest()throws Exception{
-		User usuario = Mockito.mock(User.class);
+	public void signupTest()throws Exception{
+		//User usuario = Mockito.mock(User.class);
         when(usuario.getEmail()).thenReturn("");
 		when(usuario.getContrasenia()).thenReturn("");
 		when(usuario.getContraseniaRepetida()).thenReturn("");
-		when(usuario.comprobarDatos()).thenReturn(false);
+		when(usuario.comprobarDatos()).thenReturn(null);
 		when(usuario.validarMail()).thenReturn(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/signup").flashAttr("usuario", usuario))
 		.andExpect(MockMvcResultMatchers.view().name("signup.html"))
         .andExpect(MockMvcResultMatchers.model().attribute("correoMal", true));
     }
-	
+
+
 }

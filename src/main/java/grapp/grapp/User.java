@@ -62,14 +62,17 @@ public class User
          } else {
              return true;
          }
-         // end-user-code
+         // end-user-code<
      }
-
-    public Boolean comprobarDatos(){
-        if(!validarMail()) return false;
-        if(this.contrasenia.length()<8) return false;
-        if(!this.contrasenia.equals(contraseniaRepetida)) return false;
-         return true;
+/**
+ * 
+ */
+    public String comprobarDatos(){
+        if(this.email==null || this.contrasenia==null || this.contraseniaRepetida==null ) return "Completa todos los campos";
+        if(!validarMail()) return "Error de formato del correo.";
+        if(this.contrasenia.length()<8) return "La contraseña tiene que ser mayor de 8 caracteres";
+        if(!this.contrasenia.equals(contraseniaRepetida)) return "La contraseña no coincide";
+         return null;
     }
     public Boolean login(String email, String contrasenia){
         return this.email.equals(email) && this.contrasenia.equals(contrasenia);
@@ -93,22 +96,24 @@ public class User
 		    
 		return sb.toString();
 	}
-    public String insertUser(String email, String contrasenia, DataSource dataSource){
+    public String insertUser(DataSource dataSource){
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            stmt.executeQuery("INSERT INTO USUARIOS VALUES ("+ email + ", " + hashContrasenia(contrasenia) +")");
+            stmt.executeUpdate("INSERT INTO USUARIOS VALUES ('"+ this.email + "', '" + hashContrasenia(this.contrasenia) +"')");
             return "Usuario insertado correctamente";
         } catch(Exception e){
             return "Fallo al insertar usuario, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres";
         }
 
     }
-    public boolean searchUser(String email, String contrasenia, DataSource dataSource){
+    public boolean searchUser(DataSource dataSource){
         boolean logueado = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' AND contrasenia='"+contrasenia+"' ");
-            if(rs.next()) logueado = true;
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+this.email+"' AND contraseña='"+hashContrasenia(this.contrasenia)+"' ");
+            if(rs.next()){
+                if(rs.getInt(1) != 0)logueado = true;
+            } 
         } catch(Exception e){
             System.out.println("Fallo al loguearse, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres");
         }
@@ -116,12 +121,14 @@ public class User
     }
 
     
-    public boolean searchUserForSingUp(String email, DataSource dataSource){
+    public boolean searchUserForSignUp(DataSource dataSource){
         boolean existe = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE email='"+email+"' ");
-            if(rs.next()) existe = true;
+            if(rs.next()){
+                if(rs.getInt(1) != 0)existe = true;
+            } 
         } catch(Exception e){
             System.out.println("Usuario ya existente");
         }

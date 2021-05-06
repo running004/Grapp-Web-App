@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import javax.validation.Valid;
 
@@ -35,8 +37,10 @@ public class appController implements ErrorController{
     Boolean usuarioLoggeado = false;
    
     //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
-    void botonLog(Model model){   
-        model.addAttribute("usuarioLogin",usuarioLoggeado) ;
+    void botonLog(Model model, HttpServletRequest request){   
+        Boolean usuarioLoggeado = request.getSession().getAttribute("email")==null?false:true;
+        model.addAttribute("usuarioLogin",usuarioLoggeado);
+        model.addAttribute("username", request.getSession().getAttribute("email"));
     }
 
     @Value("${spring.datasource.url}")
@@ -46,7 +50,7 @@ public class appController implements ErrorController{
     private DataSource dataSource;
 
     @GetMapping(value= "/")
-    String index(Model model){
+    String index(Model model, HttpServletRequest request){
         model.addAttribute("usuarioLogin", false);
         model.addAttribute("key", "prueba");
         List<String> listado = new ArrayList<String>();
@@ -54,204 +58,106 @@ public class appController implements ErrorController{
         listado.add("Subir fotos: te permite subir una foto devolviendo un id");
         listado.add("Ver fotos: te permite ver las fotos subidas mediante id");
         model.addAttribute("features", listado);
-        botonLog(model);
+        botonLog(model,request);
         return "index.html";
     }
+
     @GetMapping(value="/MiArmario")
-    String MiArmario(Model model,@Valid formulario formulario){
+    String MiArmario(Model model,@Valid formulario formulario, HttpServletRequest request){
         model.addAttribute("usuarioLogin", false);
-        botonLog(model);
+        botonLog(model,request);
         return "MiArmario.html";
     }
 
-
-    @GetMapping(value="/upload")
-    String upload(Model model,@Valid formulario formulario){
-        botonLog(model);
-        return "upload.html";
-    }
-
-    @PostMapping(value="/upload")
-    String uploadPost(Model model, @Valid formulario formulario, BindingResult bindingResult){
-        
-        //bbddd
-        try (Connection connection = dataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            //upload photo
-            String generatedId = imgUrlScraper.uploadImg(formulario.getImg());
-            model.addAttribute("imgUrl", imgUrlScraper.getImageUrl(generatedId));
-            //get id 
-            String userID = formulario.getText();
-            model.addAttribute("id", generatedId);
-            model.addAttribute("userID", userID);
-
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS USUARIOS(email VARCHAR(10), contraseña VARCHAR(10))");
-            stmt.executeUpdate("INSERT INTO imgs VALUES ('" + userID + "', '" + generatedId  + "')");
-            ResultSet rs = stmt.executeQuery("SELECT count(*) as check FROM imgs WHERE idUser='"+userID+"' AND idImg='"+generatedId+"'");
-            Boolean output = rs.next();
-            if(output){
-                model.addAttribute("exito", "Se ha insertado");
-            }
-            else{
-                model.addAttribute("exito", "No se ha insertado");
-            }
-
-        } catch(Exception e){
-            model.addAttribute("excepcion", e.getMessage());
-        }
-        botonLog(model);
-        return "upload.html";
-    }
-
     @GetMapping(value="/searchPrenda")
-    String searchPrenda(Model model,@Valid formulario formulario){        
-        botonLog(model);
+    String searchPrenda(Model model,@Valid formulario formulario, HttpServletRequest request){        
+        botonLog(model,request);
         return "searchPrenda";
     }
-    @GetMapping(value="/see")
-    String see(Model model,@Valid formulario formulario){        
-        botonLog(model);
-        return "see.html";
-    }
-
     
-    @GetMapping(value="/favorites")
-    String favorites(Model model,@Valid formulario formulario){  
-        botonLog(model);      
-        return "favorites.html";
+    @GetMapping(value="/upload")
+    String upload(Model model,@Valid formulario formulario, HttpServletRequest request){        
+        botonLog(model,request);
+        return "upload.html";
     }
-    
-    @GetMapping(value="/message")
-    String message(Model model,@Valid formulario formulario){    
-        botonLog(model);    
-        return "message.html";
-    }
-
     @GetMapping(value="/signup")
-    String signup(Model model){ 
+    String signup(Model model, HttpServletRequest request){ 
         User usuario = new User();
 		model.addAttribute("usuario", usuario);  
-        botonLog(model);     
+        botonLog(model,request);     
         return "signup.html";
     }
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String crearUsuario(Model model, User usuario) {
-
-        //VALIDAR DATOS
-        if(usuario.getEmail()==null || usuario.getContrasenia()==null || usuario.getContraseniaRepetida() == null){
-            //mandar error al html de email mal
-            model.addAttribute("faltan datos", true);
+    public String crearUsuario(User usuario,Model model, HttpServletRequest request) {
+        model.addAttribute("usuario", new User());
+        String comprobacion = usuario.comprobarDatos();
+        if(comprobacion !=null){
+            model.addAttribute("errmessg", comprobacion);
             return "signup.html";
         }
-        
-        if(!usuario.comprobarDatos()){
-        if(!usuario.validarMail()){
-                //mandar error al html de email mal
-            model.addAttribute("correoMal", true);
-            }
-        else if(usuario.getContrasenia().length()<8){
-            //mandar error al html de contraseña mal
-		model.addAttribute("contraseniaMal", true);
-        }
-        else if(usuario.getContrasenia()!=usuario.getContraseniaRepetida()){
-             //mandar error al html de contraseñaR mal
-		model.addAttribute("contraseniaRMal", true);
-        }
-        return "index.html";
-    }
-        Boolean existe=usuario.searchUserForSingUp(usuario.getEmail(), dataSource);
+        Boolean existe=usuario.searchUserForSignUp(dataSource);
         if(existe){
             //mandar error al html de user ya creado
-		model.addAttribute("yaCreado", existe);
+            model.addAttribute("errmessg", "Usuario ya existente");
             return "signup.html";
         }
         else{
-            usuario.insertUser(usuario.getEmail(), usuario.getContrasenia(), dataSource);
+            model.addAttribute("yaCreado", false);
+            model.addAttribute("errorDatos", false);
+            usuario.insertUser(dataSource);
         }
         usuarioLoggeado = true;
-        botonLog(model);
-        return "index.html";
+        botonLog(model,request);
+        return "login.html";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String crearFormularioUsuario(Model model) {
+	public String crearFormularioUsuario(Model model, HttpServletRequest request) {
 		User usuario = new User();
 		model.addAttribute("usuario", usuario);
-        botonLog(model);
+        botonLog(model,request);
 		return "login.html"; 
 	}
 
     // LOGIN
-    @RequestMapping(value = "/loguearse", method = RequestMethod.GET)
-    public String login(Model model, User usuario) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(Model model, User usuario, HttpServletRequest request) {
         
         // por usuario me entran el correo y la contraseña
         System.out.println(usuario.getEmail());
         //comprobamos validez
-        this.comprobarUsuario(model, usuario);
+        try{
+            if(usuario.searchUser(dataSource)){
+                request.getSession().setAttribute("email", usuario.getEmail());
+                botonLog(model,request);
+                return "index.html";
+            } else {
+            model.addAttribute("error", "No existe esa cuenta");
+            model.addAttribute("usuario", new User());
+            return "login.html";
+            }
+        }catch(Exception e){
+            model.addAttribute("error", e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("usuario", new User());
+            return "login.html";
+        }
 
         //quedaria iniciar la sesion
+    }
+    @GetMapping(value= "/session1")
+    String session1(Model model, HttpServletRequest request){
+        request.getSession().setAttribute("test","testing");
 
-        return "index.html";
+        return "session1.html";
     }
 
-
-//---------------------------------------------------------------------------
-    //COMPROBAMOS EL INICIO DE SESION
-    @RequestMapping(value = "/comprobarusuario", method = RequestMethod.GET)
-    public String comprobarUsuario(Model model, User usuario) {
-        usuarioLoggeado = true;
-        botonLog(model);
-        System.out.println(usuario.getEmail());
-        System.out.println(usuario.getContrasenia());
-        usuario.hashContrasenia(usuario.getContrasenia());
-        
-        //aqui me haria un servicio que llame a la base de datos pasandole un mail y q compruebe que existe
-        /*
-        Usuario usu= serviceUsuario.findOne(usuario.getEmail());
-        Usuario usuar = new Usuario();
-        
-        if(usu != null) {
-        //AQUI COMPRUEBO EMAIL Y CONTRASEÑAS SON IGUALES SINO SON IGUALES LE DEVOLVEMOS AL LOGIN CON UN MENSAJE DE ERROR
-            if((usuario.getEmail().equals(usu.getEmail())) &&
-                    (usuario.getContrasenia().equals(usu.getContrasenia()))	) {
-                return "redirect:AQUI PONES EL HTML QUE QUIERAS";
-            }else {
-                model.addAttribute("usuario", usuar);
-                model.addAttribute("mensaje", "Usuario o contraseña invalidos");
-                return "login"; 
-            }
-        }
-        model.addAttribute("usuario", usuar);
-        model.addAttribute("mensaje", "Usuario o contraseña invalidos");
-        return "login"; 
-        */
-        return "index.html";
-
+    @GetMapping(value= "/session2")
+    String session2(Model model, HttpServletRequest request){
+        model.addAttribute("msg", request.getSession().getAttribute("test"));
+        return "session2.html";
     }
 
-//---------------------------------------------------------------------------
-
-    @PostMapping(value="/see")
-    String seePost(Model model, @Valid formulario formulario, BindingResult bindingResult){
-        try (Connection connection = dataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT idImg FROM imgs WHERE idUser='" + formulario.getText() +"'");
-            Map<String, String> imgUrlMap= new HashMap<String, String>();
-            while(rs.next()){
-                imgUrlMap.put(rs.getString("idImg"), imgUrlScraper.getImageUrl(imgUrlScraper.searchById(rs.getString("idImg"))));
-            }
-            model.addAttribute("urlMap", imgUrlMap);
-        } catch(Exception e){
-            model.addAttribute("excepcion", e.getMessage());
-        }
-        botonLog(model);
-        return "see.html";
-    }
-
-    //---------------------------------------------------------------------------------------------------
-
-    //HTTP Error handle DO NOT TOUCH
 
     @Override
     public String getErrorPath() {
