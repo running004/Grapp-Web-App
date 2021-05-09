@@ -75,6 +75,6 @@ public class SignupTest {
         assertNotEquals(null, correoMal.comprobarDatos());
         assertNotEquals(null, contraseniaMal.comprobarDatos());
         assertNotEquals(null, contraseniaNoCoincide.comprobarDatos());
-        }
+    }
     
 }
