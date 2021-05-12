@@ -58,30 +58,17 @@ public String comprobarDatos(){
             return "Fallo al insertar prenda, recuerde que debe ser un nombre y descripcion válida";
         }
 
-    }/*
-    public boolean searchUser(String emailUser, String foto, DataSource dataSource){
-        boolean logueado = false;
-        try (Connection c = dataSource.getConnection()) {
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE emailUser='"+emailUser+"' AND foto='"+foto+"' ");
-            if(rs.next()) logueado = true;
-        } catch(Exception e){
-            System.out.println("Fallo al loguearse, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres");
-        }
-        return logueado;
     }
-
     
-    public boolean searchUserForSingUp(String emailUser, DataSource dataSource){
+    public boolean searchPrendaPorNombre(String nombre, DataSource dataSource){
         boolean existe = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM USUARIOS WHERE emailUser='"+emailUser+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE nombre='"+nombre+"' ");
             if(rs.next()) existe = true;
         } catch(Exception e){
-            System.out.println("Usuario ya existente");
+            System.out.println("Prenda con el mismo nombre");
         }
         return existe;
     }
-    */
 }

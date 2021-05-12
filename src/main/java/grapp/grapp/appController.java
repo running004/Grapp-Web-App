@@ -86,6 +86,7 @@ public class appController implements ErrorController{
     public String crearPrenda(Prenda prenda,Model model, HttpServletRequest request) {
         model.addAttribute("prenda", new Prenda());
         String comprobacion = prenda.comprobarDatos();
+        prenda.setemailUser(request.getSession().getAttribute("email"));
         if(comprobacion !=null){
             model.addAttribute("errmessg", comprobacion);
             return " ";
@@ -99,7 +100,7 @@ public class appController implements ErrorController{
         else{
             model.addAttribute("yaCreado", false);
             model.addAttribute("errorDatos", false);
-            prenda.insertPrenda(dataSource);
+            String insertar=prenda.insertPrenda(prenda.getnombre(),prenda.getemailUser(),prenda.getdescripcion(),prenda.getfoto(),dataSource);
         }
         botonLog(model,request);
         return " ";
