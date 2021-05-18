@@ -23,6 +23,11 @@ public class BusquedaPrenda
         // buscar en la tabla de prendas por ese usario y rellenar la lista
          return "";
      }
+     public String BuscarPorNombre(String nombre,DataSource dataSource){ // cambiarlo a strings
+        if(rellenarPorNombre(nombre,dataSource)) return "No existen prendas con este nombre";
+        // buscar en la tabla de prendas por ese usario y rellenar la lista
+         return "";
+     }
      public boolean validarExisteUsuario(String emailUser, DataSource dataSource){
         boolean encontrado = false;
         try (Connection c = dataSource.getConnection()) {
@@ -39,8 +44,11 @@ public class BusquedaPrenda
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE emailUser='"+emailUser+"' ");
-            if(rs.next()) encontrado = true;
-            
+                 while(rs.next()){
+                    Prenda aux= new Prenda(rs.getString("nombre"),rs.getString("emailUser") ,rs.getString("foto") ,rs.getString("descripcion"));
+                    miLista.add(aux);
+                    encontrado = true;
+            }
             //rellenar la lista que no seeeee wiiiiii
 
         } catch(Exception e){
@@ -49,34 +57,35 @@ public class BusquedaPrenda
         return encontrado;
     }
 
-    
-    public Boolean BuscarPorNombre(String nombre, DataSource dataSource){
-        boolean existe = false;
+
+    public Boolean rellenarPorNombre(String nombre, DataSource dataSource){
+        boolean encontrado = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE nombre="+nombre+" ");
-            if(rs.next()){
-                if(rs.getInt(1) != 0)
-                    existe = true;
-            } 
+            while(rs.next()){
+                Prenda aux= new Prenda(rs.getString("nombre"),rs.getString("emailUser") ,rs.getString("foto") ,rs.getString("descripcion"));
+                miLista.add(aux);
+                encontrado = true;
+        }
         } catch(Exception e){
             System.out.println("Fallo al buscar la prenda por nombre");
         }
-        return existe;
+        return encontrado;
     }
-    
-    public Boolean BuscarPorUsuario(String nombre){
-
-        return true;
-    }
-    
-    public Boolean BuscarMiArmarioTodo(String nombre){
-
-        return true;
-    }
-    
-    public Boolean BuscarMiArmarioPorNombre(String nombre){
-
-        return true;
+    public Boolean BuscarMiArmarioPorNombre(String nombre,String emailUser, DataSource dataSource){
+        boolean encontrado = false;
+        try (Connection c = dataSource.getConnection()) {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE nombre="+nombre+"' AND emailUser='"+emailUser+"' ");
+            while(rs.next()){
+                Prenda aux= new Prenda(rs.getString("nombre"),rs.getString("emailUser") ,rs.getString("foto") ,rs.getString("descripcion"));
+                miLista.add(aux);
+                encontrado = true;
+        }
+        } catch(Exception e){
+            System.out.println("Fallo al buscar la prenda por nombre");
+        }
+        return encontrado;
     }
 }
