@@ -43,8 +43,8 @@ public class BusquedaPrenda
          return null;
      }
      public String BuscarPorNombre(String nombre,DataSource dataSource){ // cambiarlo a strings
-        if(validarNombrePrenda(nombre, dataSource)) return "El formato del nombre de la prenda no es valido";
-        if(rellenarPorNombre(nombre,dataSource)) return "No existen prendas con este nombre";
+        if(!validarNombrePrenda(nombre, dataSource)) return "El formato del nombre de la prenda no es valido";
+        if(!rellenarPorNombre(nombre,dataSource)) return "No existen prendas con este nombre";
         // buscar en la tabla de prendas por ese usario y rellenar la lista
          return "";
      }
