@@ -11,7 +11,7 @@ public class Connect {
     
     
     private static String dbUrl = "jdbc:postgresql://ec2-52-50-171-4.eu-west-1.compute.amazonaws.com/dduetcch1mnm33?user=fqdunfercvmtrb&password=4893ba593d036a518f11634deae9224233e95c7f1e9e37bb2f446805dceb3a29&ssl=false";
-  
+
     private static DataSource dataSource;
 
     private static Connect conexion;
