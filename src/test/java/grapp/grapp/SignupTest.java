@@ -1,80 +1,69 @@
 package grapp.grapp;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.when;
 
-import com.google.gson.Gson;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.context.jdbc.Sql;
+
 
 @SpringBootTest
+@Sql("/test-myjdbc.sql")
 public class SignupTest {
 
-	/*@Mock
-    private User usuarioValido;
-    @Mock
-    private User usuarioNoValido;
-
-    @InjectMocks
-    private appController controller;
-    private MockMvc mockMvc;
-
-
-	
-    @BeforeEach
-    public void setUp() throws Exception{
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        when(usuarioValido.validarMail()).thenReturn(true);
-        when(usuarioNoValido.validarMail()).thenReturn(false);
-        when(usuarioValido.comprobarDatos()).thenReturn(null);
-        when(usuarioNoValido.comprobarDatos()).thenReturn("Completa todos los campos");
-    }
-
-    @Test
-	public void InsertValido()throws Exception{
-        User u = new User();
-        u.setEmail("1");
-
-        Gson gson = new Gson();
-        String json = gson.toJson(u);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/signup").contentType(MediaType.APPLICATION_JSON).content(json))
-		.andExpect(MockMvcResultMatchers.view().name("login.html"));
-
-    }
-    */
-
-    @Test
-    public void usuarioValido(){
-        
-        User usuarioValido = new User("elmillor@payaso.es", "12345678", "12345678");
-        assertEquals(null, usuarioValido.comprobarDatos());
-    }
-
-    @Test
-    public void usuarioNoValido(){
-        User correoMal = new User("ae", "12345678", "12345678");
-        User contraseniaMal = new User("elmillor@payaso.cum", "123", "123");
-        User contraseniaNoCoincide = new User("elmillor@payaso.cum", "12345678", "123987654");
-        assertNotEquals(null, correoMal.comprobarDatos());
-        assertNotEquals(null, contraseniaMal.comprobarDatos());
-        assertNotEquals(null, contraseniaNoCoincide.comprobarDatos());
-    }
+	private static DataSource dataS = Connect.getConnect().getDataSource();
     
+
+    @Test
+    @Order(1)
+    public void usuarioValido() throws SQLException{
+        User usuarioValido = new User("test@test.test", "12345678", "12345678");
+
+        //realizamos todas las pruebas con un usuario valido, que no exista en la base de datos y se inserte correctamente
+        assertEquals(null, usuarioValido.comprobarDatos());
+        assertEquals(false, usuarioValido.searchUser(dataS));
+        assertEquals("Usuario insertado correctamente", usuarioValido.insertUser(dataS));
+    }
+
+    @Test   
+    @Order(2)
+    public void usuarioNoValido(){
+        //probamos la comprobacion del correo no valido
+        User usuarioNoValido = new User("ae", "12345678", "12345678");
+        assertNotEquals(null, usuarioNoValido.comprobarDatos());
+
+        //probamos la comprobacion de contraseña no valida
+        usuarioNoValido = new User("elmillor@payaso.cum", "123", "123");
+        assertNotEquals(null, usuarioNoValido.comprobarDatos());
+
+        //probamos la compracion de contraseña distinta
+        usuarioNoValido = new User("elmillor@payaso.cum", "12345678", "123987654");
+        assertNotEquals(null, usuarioNoValido.comprobarDatos());
+
+        //probamos recoger bien las excepciones SQL
+        usuarioNoValido = new User(null, null, null);
+        assertNotEquals("Usuario insertado correctamente", usuarioNoValido.insertUser(dataS));
+        }
+        
+    @AfterAll
+    public static void borradoDatos(){
+        //borramos el usuario insertado correctamente
+        String query = "delete from usuarios where email = 'test@test.test'";
+        PreparedStatement preparedStmt;
+        try {
+            preparedStmt = dataS.getConnection().prepareStatement(query);
+            preparedStmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            
+    }
 }

@@ -97,6 +97,7 @@ public class User
             if(rs.next()){
                 if(rs.getInt(1) != 0)logueado = true;
             } 
+            c.close();
         } catch(Exception e){
             System.out.println("Fallo al loguearse, recuerde que debe ser un correo válido y la contraseña como mínimo debe tener 8 caracteres");
         }
