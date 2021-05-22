@@ -91,7 +91,7 @@ public class appController implements ErrorController{
             model.addAttribute("errmessg", comprobacion);
             return " ";
         }
-        Boolean existe=prenda.searchPrendaPorNombre(prenda.getnombre() , dataSource);
+        Boolean existe=prenda.searchPrendaPorNombre(prenda.getnombre(), dataSource);
         if(existe){
             //mandar error al html de user ya creado
             model.addAttribute("errmessg", "Prenda con el mismo nombre");
@@ -105,6 +105,47 @@ public class appController implements ErrorController{
         botonLog(model,request);
         return " ";
     }
+    
+    @RequestMapping(value= "/index", method = RequestMethod.GET)
+	public String crearFormularioBuscar(Model model, HttpServletRequest request) {
+		BusquedaPrenda busqueda= new BusquedaPrenda(); 
+		model.addAttribute("busqueda", busqueda);
+        return "index.html";
+    }
+    @RequestMapping(value = "/index", method = RequestMethod.POST)
+    String BuscarPrenda(String nombre, String emailUser, Model model, HttpServletRequest request){ 
+        BusquedaPrenda busqueda= new BusquedaPrenda(); 
+        if(nombre!=null && emailUser!=null){ // busqueda por nombre y usuario
+           if( busqueda.BuscarPorNombreyUsuario(nombre, emailUser, dataSource)==null){
+            List miLista=busqueda.getLista();
+            model.addAttribute("miLista", miLista);
+           }
+           else{
+            model.addAttribute("error", busqueda.BuscarPorNombre(nombre, dataSource));
+           }
+        }
+        else if(nombre!=null){ //busqueda por nombre
+            if( busqueda.BuscarPorNombre(nombre, dataSource)==null){
+                List miLista=busqueda.getLista();
+                model.addAttribute("miLista", miLista);
+               }
+               else{
+                model.addAttribute("error", busqueda.BuscarPorNombre(nombre, dataSource));
+               }
+        }
+        else{ // busqueda por usuario
+            if( busqueda.BuscarPorUsuario(emailUser, dataSource)==null){
+                List miLista=busqueda.getLista();
+                model.addAttribute("miLista", miLista);
+               }
+               else{
+                model.addAttribute("error", busqueda.BuscarPorNombre(nombre, dataSource));
+               }
+        }
+        botonLog(model,request);     
+        return "signup.html";
+    }
+
     @GetMapping(value="/signup")
     String signup(Model model, HttpServletRequest request){ 
         User usuario = new User();
