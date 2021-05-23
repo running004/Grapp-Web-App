@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class appController implements ErrorController{
     Boolean usuarioLoggeado = false;
-   
+    Boolean buscado=true;
     //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
     void botonLog(Model model, HttpServletRequest request){   
         Boolean usuarioLoggeado = request.getSession().getAttribute("email")==null?false:true;
@@ -50,7 +50,7 @@ public class appController implements ErrorController{
     private DataSource dataSource;
 
     @GetMapping(value= "/")
-    String index(Model model, HttpServletRequest request){
+    String index2(Model model, HttpServletRequest request){
         model.addAttribute("usuarioLogin", false);
         model.addAttribute("key", "prueba");
         List<String> listado = new ArrayList<String>();
@@ -61,12 +61,84 @@ public class appController implements ErrorController{
         botonLog(model,request);
         return "index.html";
     }
+    @RequestMapping(value= "/index")
+	public String index(Model model, HttpServletRequest request) {
+		BusquedaPrenda busqueda= new BusquedaPrenda(); 
+		model.addAttribute("busqueda", busqueda);
+        botonLog(model,request);  
+        return "index.html";
+    }
+    @RequestMapping(value = "/index", method = RequestMethod.POST)
+    String BuscarPrenda(BusquedaPrenda busqueda, Model model, HttpServletRequest request){
+        model.addAttribute("busqueda", new BusquedaPrenda());
+        if(buscado==true){
+        if(busqueda.getnombre()!=null && busqueda.getemailUser()!=null){ // busqueda por nombre y usuario
+           if( busqueda.BuscarPorNombreyUsuario(busqueda.getnombre(), busqueda.getemailUser(), dataSource)==null){
+            List miLista=busqueda.getmiLista();
+            model.addAttribute("miLista", miLista);
+           }
+           else{
+            model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+           }
+        }
+        else if(busqueda.getnombre()!=null){ //busqueda por nombre
+            if( busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource)==null){
+                List miLista=busqueda.getmiLista();
+                model.addAttribute("miLista", miLista);
+               }
+               else{
+                model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+               }
+        }
+        else{ // busqueda por usuario
+            if( busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource)==null){
+                List miLista=busqueda.getmiLista();
+                model.addAttribute("miLista", miLista);
+               }
+               else{
+                model.addAttribute("error", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
+               }
+        }
+    }
+    else{ 
+        busqueda.todo(dataSource);
+        model.addAttribute("miLista",busqueda.getmiLista());
+    }
+    botonLog(model,request);     
+    return "index.html";
+    }
 
-    @GetMapping(value="/MiArmario")
-    String MiArmario(Model model,@Valid formulario formulario, HttpServletRequest request){
-        model.addAttribute("usuarioLogin", false);
-        botonLog(model,request);
+    @RequestMapping(value= "/MiArmario", method = RequestMethod.GET)
+	public String crearFormularioBuscarMiArmario(Model model, HttpServletRequest request) {
+		BusquedaPrenda busqueda= new BusquedaPrenda(); 
+		model.addAttribute("busqueda", busqueda);
         return "MiArmario.html";
+    }
+    @RequestMapping(value = "/MiArmario", method = RequestMethod.POST)
+    String BuscarPrendaMiArmario(BusquedaPrenda busqueda, Model model, HttpServletRequest request){
+        busqueda.setemailUser((String) request.getSession().getAttribute("email"));
+        if(buscado==true){
+        if(busqueda.getnombre()!=null && busqueda.getemailUser()!=null){ // busqueda por nombre y usuario
+           if( busqueda.BuscarPorNombreyUsuario(busqueda.getnombre(), busqueda.getemailUser(), dataSource)==null){
+            List miLista=busqueda.getmiLista();
+            model.addAttribute("miLista", miLista);
+           }
+           else{
+            model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+           }
+        }
+    }
+    else{ 
+        if( busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource)==null){
+            List miLista=busqueda.getmiLista();
+            model.addAttribute("miLista", miLista);
+           }
+           else{   // poner el user de la sesion
+            model.addAttribute("error", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
+           }
+    }
+    botonLog(model,request);     
+    return "MiArmario.html";
     }
 
     @GetMapping(value="/searchPrenda")
