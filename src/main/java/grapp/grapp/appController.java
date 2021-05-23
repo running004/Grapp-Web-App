@@ -37,7 +37,7 @@ public class appController implements ErrorController{
     Boolean usuarioLoggeado = false;
     Boolean buscado=true;
     //Para en el header no mostrar el boton de login cuando el usuario haya iniciado sesion
-    void botonLog(Model model, HttpServletRequest request){   
+    void botonLog(Model model, HttpServletRequest request){
         Boolean usuarioLoggeado = request.getSession().getAttribute("email")==null?false:true;
         model.addAttribute("usuarioLogin",usuarioLoggeado);
         model.addAttribute("username", request.getSession().getAttribute("email"));
@@ -112,6 +112,7 @@ public class appController implements ErrorController{
         model.addAttribute("usuarioLogin", false);
         botonLog(model,request);
         BusquedaPrenda busqueda= new BusquedaPrenda(); 
+        busqueda.todo(dataSource);
 		model.addAttribute("busqueda", busqueda);
         return "MiArmario.html";
     }
@@ -152,12 +153,12 @@ public class appController implements ErrorController{
     public String crearPrenda(Prenda prenda,Model model, HttpServletRequest request) {
         model.addAttribute("prenda", new Prenda());
         String comprobacion = prenda.comprobarDatos();
-        //prenda.setemailUser(request.getSession().getAttribute("email"));
+        prenda.setemailUser((String) request.getSession().getAttribute("email"));
         if(comprobacion !=null){
             model.addAttribute("errmessg", comprobacion);
             return "upload.html";
         }
-        Boolean existe=prenda.searchPrendaPorNombre(prenda.getnombre() , dataSource);
+        Boolean existe=prenda.searchPrendaPorNombre(prenda.getnombre(),dataSource);
         if(existe){
             //mandar error al html de user ya creado
             model.addAttribute("errmessg", "Prenda con el mismo nombre");
