@@ -69,7 +69,7 @@ public class appController implements ErrorController{
             model.addAttribute("miLista", miLista);
            }
            else{
-            model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+            model.addAttribute("errmessg", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
            }
         }
         else if(busqueda.getnombre()!=null){ //busqueda por nombre
@@ -78,7 +78,7 @@ public class appController implements ErrorController{
                 model.addAttribute("miLista", miLista);
                }
                else{
-                model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+                model.addAttribute("errmessg", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
                }
         }
         else{ // busqueda por usuario
@@ -87,7 +87,7 @@ public class appController implements ErrorController{
                 model.addAttribute("miLista", miLista);
                }
                else{
-                model.addAttribute("error", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
+                model.addAttribute("errmessg", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
                }
         }
     }
@@ -117,7 +117,7 @@ public class appController implements ErrorController{
             model.addAttribute("miLista", miLista);
            }
            else{
-            model.addAttribute("error", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
+            model.addAttribute("errmessg", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
            }
         }
     }
@@ -127,7 +127,7 @@ public class appController implements ErrorController{
             model.addAttribute("miLista", miLista);
            }
            else{   // poner el user de la sesion
-            model.addAttribute("error", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
+            model.addAttribute("errmessg", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
            }
     }
     botonLog(model,request);     
