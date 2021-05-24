@@ -12,24 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PrendaGR3Test {
-
-   @Autowired
-   Prenda ropa;
+   
 
    //---------------Test unitarios---------------
    
    @Test
    public void ValidarAtributos(){
    
-      ropa = new Prenda("Ropa valida","noseque@algo.com", "url ropa", "Descripcion valida");
+      Prenda ropa = new Prenda("Ropa valida8()","noseque@algo.com", "url ropa", "Descripcion valida");
       assertNull(ropa.comprobarDatos()); 
         
       ropa = new Prenda("Ropa no valida, tamaño del nombre mayor que 50 xxxx","noseque@algo.com", "url ropa", "Descripcion valida");
       assertEquals(ropa.comprobarDatos(), "El nombre no puede tener mas de 50 caracteres."); 
 
       ropa = new Prenda("Ropa no valida, caracteres incorrecots *+[#","noseque@algo.com", "url ropa", "Descripcion valida");
-      assertEquals(ropa.comprobarDatos(), "El nombre contiene caracteres invalido, deben ser [A-Za-z0-9()]"); 
-
+      assertEquals(ropa.comprobarDatos(), "El nombre contiene caracteres invalido, deben ser letras, numeros y ()");
+      
       ropa = new Prenda("Ropa no valida","noseque@algo.com", "url ropa", "Descripcion no valida xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       assertEquals(ropa.comprobarDatos(), "La descripcion no puede tener mas de 280 caracteres."); 
         
