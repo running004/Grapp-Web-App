@@ -71,7 +71,9 @@ public String comprobarDatos(){
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE nombre='"+nombre+"' ");
-            if(rs.next()) existe = true;
+            if(rs.next()){
+                if(rs.getInt(1) != 0)existe = true;
+            } 
         } catch(Exception e){
             System.out.println("Prenda con el mismo nombre");
         }
