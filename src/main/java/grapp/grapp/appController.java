@@ -65,8 +65,7 @@ public class appController implements ErrorController{
     @RequestMapping(value = "/", method = RequestMethod.POST)
     String BuscarPrenda(BusquedaPrenda busqueda, Model model, HttpServletRequest request){
         model.addAttribute("busqueda", new BusquedaPrenda());
-        if(buscado==true){
-        if(busqueda.getnombre()!=null && busqueda.getemailUser()!=null){ // busqueda por nombre y usuario
+        if(busqueda.getnombre()!="" && busqueda.getemailUser()!=""){ // busqueda por nombre y usuario
            if(busqueda.BuscarPorNombreyUsuario(busqueda.getnombre(), busqueda.getemailUser(), dataSource)==null){
             List miLista=busqueda.getmiLista();
             model.addAttribute("miLista", miLista);
@@ -75,7 +74,7 @@ public class appController implements ErrorController{
             model.addAttribute("errmessg", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
            }
         }
-        else if(busqueda.getnombre()!=null){ //busqueda por nombre
+        else if(busqueda.getnombre()!="" ){ //busqueda por nombre
             if( busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource)==null){
                 List miLista=busqueda.getmiLista();
                 model.addAttribute("miLista", miLista);
@@ -84,7 +83,7 @@ public class appController implements ErrorController{
                 model.addAttribute("errmessg", busqueda.BuscarPorNombre(busqueda.getnombre(), dataSource));
                }
         }
-        else{ // busqueda por usuario
+        else if(busqueda.getemailUser()!="" ){ // busqueda por usuario
             if( busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource)==null){
                 List miLista=busqueda.getmiLista();
                 model.addAttribute("miLista", miLista);
@@ -93,8 +92,7 @@ public class appController implements ErrorController{
                 model.addAttribute("errmessg", busqueda.BuscarPorUsuario(busqueda.getemailUser(), dataSource));
                }
         }
-    }
-    else{ 
+    else { 
         busqueda.todo(dataSource);
         model.addAttribute("miLista",busqueda.getmiLista());
     }
