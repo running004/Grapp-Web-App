@@ -31,7 +31,7 @@ public class LogInTest{
         assertNotEquals(true, usuarioNoRegistrado.searchUser(dataS));
       
     }
-    @AfterAll
+    /*@AfterAll
     public static void borradoDatos(){
         //borramos el usuario insertado correctamente
         String query = "delete from usuarios where email = 'hola@cum.es'";
@@ -42,6 +42,6 @@ public class LogInTest{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-            
     }
+    */
 }
