@@ -208,7 +208,6 @@ public class appController implements ErrorController{
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model, User usuario, HttpServletRequest request) {
-        
         // por usuario me entran el correo y la contraseña
         System.out.println(usuario.getEmail());
         //comprobamos validez
@@ -220,13 +219,20 @@ public class appController implements ErrorController{
                 busqueda.todo(dataSource);
                 model.addAttribute("busqueda", busqueda);
                 return "index.html";
-            } else {
-                model.addAttribute("error", "No existe esa cuenta");
+            } 
+            else if(usuario.comprobarDatosLogIn() != null){
+                model.addAttribute("errmessg", usuario.comprobarDatosLogIn());
                 model.addAttribute("usuario", new User());
-            return "login.html";
+                return "login.html";
             }
+            else {
+                model.addAttribute("errmessg", "El correo y la constraseña no coinciden");
+                model.addAttribute("usuario", new User());
+                return "login.html";
+            }
+            
+            
         }catch(Exception e){
-            model.addAttribute("error", usuario.comprobarDatos());
             model.addAttribute("usuario", new User());
             return "login.html";
         }

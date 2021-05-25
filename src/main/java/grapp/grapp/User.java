@@ -56,6 +56,12 @@ public class User
         if(!this.contrasenia.equals(contraseniaRepetida)) return "La contraseña no coincide";
          return null;
     }
+    public String comprobarDatosLogIn(){
+        if(this.email=="" || this.contrasenia== "") return "Completa todos los campos";
+        if(!validarMail()) return "Error de formato del correo.";
+        return null;
+    }
+
 
     public Boolean login(String email, String contrasenia){
         return this.email.equals(email) && this.contrasenia.equals(contrasenia);
