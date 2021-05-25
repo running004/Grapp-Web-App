@@ -122,7 +122,7 @@ public class appController implements ErrorController{
     // LOGIN
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model, User usuario, HttpServletRequest request) {
-        
+        model.addAttribute("error", usuario.comprobarDatos());
         // por usuario me entran el correo y la contraseña
         System.out.println(usuario.getEmail());
         //comprobamos validez
