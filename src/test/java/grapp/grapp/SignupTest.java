@@ -3,6 +3,7 @@ package grapp.grapp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -58,9 +59,12 @@ public class SignupTest {
         //borramos el usuario insertado correctamente
         String query = "delete from usuarios where email = 'test@test.test'";
         PreparedStatement preparedStmt;
+        
         try {
-            preparedStmt = dataS.getConnection().prepareStatement(query);
+            Connection c =   dataS.getConnection();
+            preparedStmt = c.prepareStatement(query);
             preparedStmt.execute();
+            c.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
