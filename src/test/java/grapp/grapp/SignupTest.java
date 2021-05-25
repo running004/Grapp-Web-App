@@ -52,7 +52,6 @@ public class SignupTest {
         usuarioNoValido = new User(null, null, null);
         assertNotEquals("Usuario insertado correctamente", usuarioNoValido.insertUser(dataS));
         }
-        
     @AfterAll
     public static void borradoDatos(){
         //borramos el usuario insertado correctamente
@@ -66,4 +65,5 @@ public class SignupTest {
         }
             
     }
+
 }
