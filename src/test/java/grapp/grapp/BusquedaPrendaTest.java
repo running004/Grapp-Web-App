@@ -33,7 +33,7 @@ public class BusquedaPrendaTest {
        /* prenda.insertPrenda(prenda.getnombre(), prenda.getemailUser(), prenda.getdescripcion(),
              prenda.getfoto(), data);*/
         prenda.searchPrendaPorNombre(prenda.getnombre(), data);
-        BusquedaPrenda busq = new BusquedaPrenda();
+        BusquedaPrenda busq = new BusquedaPrenda(prenda.getnombre(), prenda.getemailUser());
         assertEquals("", busq.BuscarPorNombre(prenda.getnombre(), data));
      }
  

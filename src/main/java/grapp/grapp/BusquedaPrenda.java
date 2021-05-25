@@ -87,7 +87,7 @@ public class BusquedaPrenda
         boolean encontrado = false;
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM PRENDAS WHERE nombre='"+nombre+"' ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM PRENDAS WHERE nombre='"+nombre+"' ");
             while(rs.next()){
                 Prenda aux= new Prenda(rs.getString("nombre") ,rs.getString("propietario") ,rs.getString("imgurl"),rs.getString("descripcion"));
                 miLista.add(aux);
