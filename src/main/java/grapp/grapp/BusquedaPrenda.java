@@ -14,7 +14,10 @@ public class BusquedaPrenda
 {
     private List<Prenda> miLista ;
     private String nombre, emailUser;
-    public BusquedaPrenda(){}
+    public BusquedaPrenda(){
+        this.miLista = new ArrayList<Prenda>();
+
+    }
     public BusquedaPrenda(String nombre, String emailUser){
         miLista = new ArrayList<Prenda>();
         this.nombre=nombre;
@@ -77,8 +80,6 @@ public class BusquedaPrenda
                     miLista.add(aux);
                     encontrado = true;
             }
-            //rellenar la lista que no seeeee wiiiiii
-
         } catch(Exception e){
             System.out.println("No existe este usuario.");
         }
@@ -118,17 +119,19 @@ public class BusquedaPrenda
         return encontrado;
     }
     public void todo(DataSource dataSource){
+        
         try (Connection c = dataSource.getConnection()) {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM PRENDAS");
             while(rs.next()){
-                Prenda aux= new Prenda(rs.getString("nombre") ,rs.getString("propietario") ,rs.getString("imgurl"),rs.getString("descripcion"));
+               Prenda aux= new Prenda(rs.getString("nombre") ,rs.getString("propietario") ,rs.getString("imgurl"),rs.getString("descripcion"));
                 miLista.add(aux);
         }
         } catch(Exception e){
 
         }
     }
+  
     public Boolean validarNombrePrenda(String nombre, DataSource dataSource){
         return nombre.matches("[a-zA-Z]*");
     }
