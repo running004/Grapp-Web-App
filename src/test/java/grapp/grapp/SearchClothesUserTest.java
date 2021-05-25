@@ -73,14 +73,9 @@ public class SearchClothesUserTest {
         assertEquals("El usuario no tiene subida ninguna prenda", bp.BuscarPorUsuario( usuarioSinPrendas.getEmail(), dataS));
 
         //probamos un usuario que no existe en el metodo completo
-<<<<<<< HEAD
         assertNotEquals("Este usuario no existe", bp.BuscarPorUsuario( "noExisto", dataS));
         */
     }
-=======
-        assertEquals("Este usuario no existe", bp.BuscarPorUsuario( "noExisto", dataS));
-        }
->>>>>>> 560c77458da9db2ea217704e33928dd502df1f65
         
     @AfterAll
     public static void borradoDatos(){
