@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 @SpringBootTest
 @Sql("/test-myjdbc.sql")
 public class LogInTest{
-    private static DataSource dataS = Connect.getConnect().getDataSource();
+    private static DataSource dataS = ConnectForTests.getConnect().getDataSource();
     @Test
     @Order(1)
     public void usuarioRegistrado(){

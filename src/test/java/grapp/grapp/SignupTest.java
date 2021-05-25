@@ -19,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/test-myjdbc.sql")
 public class SignupTest {
 
-	private static DataSource dataS = Connect.getConnect().getDataSource();
+	private static DataSource dataS = ConnectForTests.getConnect().getDataSource();
     
 
     @Test
