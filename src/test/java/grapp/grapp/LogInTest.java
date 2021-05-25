@@ -3,12 +3,9 @@ package grapp.grapp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,5 +27,6 @@ public class LogInTest{
         User usuarioNoRegistrado = new User("loquesea@mk.es", "12345678", "12345678");
         assertNotEquals(true, usuarioNoRegistrado.searchUser(dataS));
     }
-   
+
+
 }
