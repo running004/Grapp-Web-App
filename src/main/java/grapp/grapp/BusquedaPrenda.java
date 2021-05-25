@@ -82,8 +82,8 @@ public class BusquedaPrenda
                 Prenda aux= new Prenda(rs.getString("nombre") ,rs.getString("propietario") ,rs.getString("imgurl"),rs.getString("descripcion"));
                 miLista.add(aux);
                 encontrado = true;
-                c.close();
         }
+        c.close();
         } catch(Exception e){
             System.out.println("Fallo al buscar la prenda por nombre");
         }
