@@ -103,16 +103,6 @@ public class appController implements ErrorController{
     botonLog(model,request);     
     return "index.html";
     }
-    /*
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    String MostrarTodo( Model model, HttpServletRequest request){
-        BusquedaPrenda busqueda = new BusquedaPrenda();
-        busqueda.todo(dataSource);
-        model.addAttribute("miLista", busqueda.getmiLista());
-        System.out.println(busqueda.getmiLista());
-       
-        return "index.html";
-    }*/
 
     @GetMapping(value="/MiArmario")
     String MiArmario(Model model,@Valid formulario formulario, HttpServletRequest request){
