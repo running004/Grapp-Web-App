@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class BusquedaPrenda
 {
     private List<Prenda> miLista ;
@@ -43,6 +46,7 @@ public class BusquedaPrenda
         this.emailUser=emailUser;
     }
     public String BuscarPorUsuario(String nombre,DataSource dataSource){ // cambiarlo a strings
+        if(!validarMail(nombre)) return "El formato de usuario es erroneo. Contiene caracteres invalidos";
         if(!validarExisteUsuario(nombre,dataSource)) return "Este usuario no existe";
         if(!rellenarPorUsuario(nombre,dataSource)) return "El usuario no tiene subida ninguna prenda";
         // buscar en la tabla de prendas por ese usario y rellenar la lista
@@ -50,6 +54,7 @@ public class BusquedaPrenda
      }
      public String BuscarPorNombre(String nombre,DataSource dataSource){ // cambiarlo a strings
         if(!validarNombrePrenda(nombre, dataSource)) return "El formato del nombre de la prenda no es valido";
+        if(nombre.length()>50) return "El nombre no puede tener mas de 50 caracteres."; // falta poner que no haya caracteres raros
         if(!rellenarPorNombre(nombre,dataSource)) return "No existen prendas con este nombre";
         // buscar en la tabla de prendas por ese usario y rellenar la lista
          return null;
@@ -143,4 +148,14 @@ public class BusquedaPrenda
     public Boolean validarNombrePrenda(String nombre, DataSource dataSource){
         return nombre.matches("[a-zA-Z]*");
     }
+    public boolean validarMail(String email) {
+        if (!email.equals("")) {
+             Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+             Matcher mather = pattern.matcher(email);
+             return mather.find();
+         } else {
+             return false;
+         }
+     }
 }
