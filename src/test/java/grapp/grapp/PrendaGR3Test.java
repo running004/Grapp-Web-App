@@ -115,7 +115,7 @@ public class PrendaGR3Test {
      
    }
 
-   @BeforeAll
+   @AfterAll
    public static void BorrarDatos(){
 
       String query = "delete from PRENDAS where propietario = 'asdasd@asd.es' AND NOMBRE = 'Ropa valida8()'";
@@ -131,7 +131,7 @@ public class PrendaGR3Test {
      
    }
 
-   @AfterAll
+   @BeforeAll
    public static void InsertarDatos(){
 
       String query = "INSERT INTO `usuarios` VALUES ('asdasd@asd.es', '69')";
