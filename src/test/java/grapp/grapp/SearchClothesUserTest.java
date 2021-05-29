@@ -34,7 +34,7 @@ public class SearchClothesUserTest {
 
         //realizamos todas las pruebas con un usuario valido y una prenda valida, que no existan en la base de datos y se inserten correctamente
         usuarioValido.insertUser(dataS);
-        prendaValida.insertPrenda("camiseta", "test@test.test", "Esta prenda es unicamente de prueba", "imagen", dataS);
+        prendaValida.insertPrenda("camiseta", "test@test.testa", "Esta prenda es unicamente de prueba", "imagen", dataS);
 
         //Comenzamos comprobando el metodo que valida que existe un usuario
         assertTrue(bp.validarExisteUsuario(usuarioValido.getEmail(), dataS));
@@ -70,13 +70,13 @@ public class SearchClothesUserTest {
         assertEquals("El usuario no tiene subida ninguna prenda", bp.BuscarPorUsuario( usuarioSinPrendas.getEmail(), dataS));
 
         //probamos un usuario que no existe en el metodo completo
-        assertEquals("El formato de usuario es erroneo", bp.BuscarPorUsuario( "noExisto", dataS));
+        assertEquals("El formato de usuario es erroneo. Contiene caracteres invalidos", bp.BuscarPorUsuario( "noExisto", dataS));
         }
         
     @AfterAll
     public static void borradoDatos(){
         //borramos los usuarios y la prenda insertados correctamente
-        String query = "delete from prendas where propietario = 'test@test.test'";
+        String query = "delete from prendas where propietario = 'test@test.testa'";
         PreparedStatement preparedStmt;
         try {
             preparedStmt = dataS.getConnection().prepareStatement(query);
