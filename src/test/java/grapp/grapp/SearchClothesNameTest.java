@@ -57,7 +57,7 @@ public class SearchClothesNameTest {
 
         BusquedaPrenda bp = new BusquedaPrenda();
 
-        assertEquals("El formato del nombre de la prenda no es valido", bp.BuscarPorNombre( noValida.getnombre(), dataS));
+        assertEquals("No existen prendas con este nombre", bp.BuscarPorNombre( noValida.getnombre(), dataS));
         assertEquals("No existen prendas con este nombre", bp.BuscarPorNombre( noExiste.getnombre(), dataS));
         }
 
