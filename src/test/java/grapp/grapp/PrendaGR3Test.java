@@ -1,6 +1,7 @@
 package grapp.grapp;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -119,13 +120,20 @@ public class PrendaGR3Test {
    public static void BorrarDatos(){
 
       String query = "delete from PRENDAS where propietario = 'asdasd@asd.es' AND NOMBRE = 'Ropa valida8()'";
-      PreparedStatement preparedStmt;
+      PreparedStatement preparedStmt = null;
       
       try {
           preparedStmt = dataS.getConnection().prepareStatement(query);
-          preparedStmt.execute();
+            try{
+                preparedStmt.execute();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }finally{
+                preparedStmt.close();
+            }  
       } catch (SQLException e) {
           e.printStackTrace();
+          
       }
         
      
@@ -134,12 +142,18 @@ public class PrendaGR3Test {
    @BeforeAll
    public static void InsertarDatos(){
 
-      String query = "INSERT INTO `usuarios` VALUES ('asdasd@asd.es', '69')";
-      PreparedStatement preparedStmt;
+      String query = "INSERT INTO usuarios VALUES ('asdasd@asd.es', '69')";
+      PreparedStatement preparedStmt = null;
       
       try {
           preparedStmt = dataS.getConnection().prepareStatement(query);
-          preparedStmt.execute();
+          try{
+               preparedStmt.execute();
+            }catch(SQLException e){
+               e.printStackTrace();
+           }finally{
+            preparedStmt.close();
+           }       
       } catch (SQLException e) {
           e.printStackTrace();
       }
